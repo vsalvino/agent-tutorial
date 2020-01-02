@@ -9,7 +9,9 @@ and ready to do your bidding is exactly what you need.
 In this article I will show you how to create a simple python agent that runs as
 a system daemon and can be invoked via both command line and REST API.
 
-Note: this code should be compatible with any version of Python 3.
+Note: this code should be compatible with any version of Python 3. The full
+source code is available at:
+https://github.com/vsalvino/agent-tutorial/blob/master/agent.py
 
 
 First, create a CLI
@@ -19,7 +21,7 @@ First I’m going to create a section for common app functionality. In this case
 it will just print a phrase.
 
 ```python
-# ---- COMMON FUNCTIONALITY ----------------------------------------------------
+# ---- CORE FUNCTIONALITY ------------------------------------------------------
 
 
 import random
@@ -73,7 +75,7 @@ def main() -> None:
     phrase_help = "Prints a phrase."
     phrase_cli = subparsers.add_parser(
         name="phrase",
-        description=phase_help,
+        description=phrase_help,
         help=phrase_help,
     )
     phrase_cli.add_argument(
@@ -143,7 +145,7 @@ class WebApp(BaseHTTPRequestHandler):
                 random: bool = query.get("random", [""])[0].lower() == "true"
                 r_content = json.dumps({
                     "random": random,
-                    "phrase": agent_phrase(random=random)
+                    "phrase": agent_phrase(random)
                 })
 
             # Fallback, handle 404s.
@@ -193,7 +195,7 @@ def main() -> None:
     phrase_help = "Prints a phrase."
     phrase_cli = subparsers.add_parser(
         name="phrase",
-        description=phase_help,
+        description=phrase_help,
         help=phrase_help,
     )
     phrase_cli.add_argument(
@@ -266,7 +268,7 @@ $ openssl req -x509 -nodes -newkey rsa:2048 -keyout $HOME/key.pem -out $HOME/cer
 
 On Windows (with git installed):
 
-```console
+```powershell
 PS> & "C:\Program Files\Git\usr\bin\openssl.exe" req -x509 -nodes -newkey rsa:2048 -keyout $HOME\key.pem -out $HOME\cert.pem -days 365
 ```
 
@@ -341,13 +343,13 @@ Unfortunately I have not yet done this part on Windows or Mac, so I will show
 you how to do this on a Linux server with `systemd` (which is basically every
 Linux system on earth at this point... but that’s a flame war for another day).
 
-Create a file, `my-agent.service` with the correct paths to your python
+Create a file, `myagent.service` with the correct paths to your python
 executable (it could be in a virtual environment if so desired) and your
 `agent.py` file as so:
 
 ```ini
 [Unit]
-Description=My python agent service
+Description=My python agent
 
 [Service]
 ExecStart=/usr/bin/python3 /path/to/agent.py webserver
@@ -361,16 +363,16 @@ Now run a couple OS commands (as root or using `sudo`) to install the service:
 
 ```bash
 # copy config
-$ cp my-agent.service /etc/systemd/system/
+$ cp myagent.service /etc/systemd/system/
 
 # reload configs
 $ systemctl daemon-reload
 
 # start the service
-$ systemctl start cr-agent
+$ systemctl start myagent
 
 # enable to start on reboot
-$ systemctl enable cr-agent
+$ systemctl enable myagent
 ```
 
 
@@ -383,4 +385,4 @@ files, or anything else you can imagine doing on a server. You could even have
 the agents on two servers talk to each other via the REST API!
 
 The full source code is available at:
-https://github.com/vsalvino/agent-demo/blob/master/agent.py
+https://github.com/vsalvino/agent-tutorial/blob/master/agent.py
