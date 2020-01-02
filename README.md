@@ -342,8 +342,8 @@ you how to do this on a Linux server with `systemd` (which is basically every
 Linux system on earth at this point... but that’s a flame war for another day).
 
 Create a file, `my-agent.service` with the correct paths to your python
-executable (it could be in a virtual env if so desired) and your `agent.py` file
-as so:
+executable (it could be in a virtual environment if so desired) and your
+`agent.py` file as so:
 
 ```ini
 [Unit]
@@ -382,4 +382,5 @@ function with additional functionality that invokes sub-processes, writes to
 files, or anything else you can imagine doing on a server. You could even have
 the agents on two servers talk to each other via the REST API!
 
-The full source code is available at: https://github.com/vsalvino/agent-demo.
+The full source code is available at:
+https://github.com/vsalvino/agent-demo/blob/master/agent.py
